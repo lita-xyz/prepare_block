@@ -1,0 +1,46 @@
+mod utils;
+
+use clap::Parser;
+use crate::utils::init::ValidaRethInputInitializer;
+use reth_valida::primitives::ValidaRethInput;
+use std::fs::File;
+
+
+/// The CLI arguments for the Valida Reth program.
+#[derive(Parser, Debug)]
+pub struct ValidaRethArgs {
+    #[arg(short, long)]
+    rpc_url: String,
+
+    #[arg(short, long)]
+    block_number: u64,
+
+    #[arg(short, long)]
+    use_cache: bool,
+}
+
+#[tokio::main]
+async fn main() {
+    // Parse arguments.
+    let args = ValidaRethArgs::parse();
+
+    // Get input.
+    let input: ValidaRethInput = if !args.use_cache {
+        let input = ValidaRethInput::initialize(&args.rpc_url, args.block_number)
+            .await
+            .unwrap();
+        let mut file =
+            File::create(format!("{}.bin", args.block_number)).expect("unable to open file");
+        bincode::serialize_into(&mut file, &input).expect("unable to serialize input");
+        input
+    } else {
+        let file = File::open(format!("{}.bin", args.block_number)).expect("unable to open file");
+        bincode::deserialize_from(file).expect("unable to deserialize input")
+    };
+
+    // Write the input directly to a file using bincode
+    let mut file = File::create("input.bin").expect("Failed to create file");
+    bincode::serialize_into(&mut file, &input).expect("Failed to write input to file");
+    
+    println!("Input has been written to input.bin");
+}
