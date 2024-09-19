@@ -112,7 +112,8 @@ impl ValidaRethInputInitializer for ValidaRethInput {
         for account in initial_db.accounts.values() {
             let code = &account.info.code;
             if let Some(code) = code {
-                contracts.insert(code.clone());
+                let bytes = code.bytes();
+                contracts.insert(bytes.clone());
             }
         }
 
@@ -124,7 +125,7 @@ impl ValidaRethInputInitializer for ValidaRethInput {
         let input = ValidaRethInput {
             parent_state_trie: state_trie,
             parent_storage: storage,
-            contracts: contracts.iter().map(|code| Bytes::from(code.bytecode().to_vec())).collect(),
+            contracts: contracts.iter().cloned().collect(),
             ancestor_headers,
             ..input
         };
