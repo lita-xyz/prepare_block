@@ -3,8 +3,8 @@ mod utils;
 use clap::Parser;
 use crate::utils::init::ValidaRethInputInitializer;
 use reth_valida::primitives::ValidaRethInput;
-use std::fs::File;
-
+use std::fs::{File, OpenOptions};
+use std::io::Write;
 
 /// The CLI arguments for the Valida Reth program.
 #[derive(Parser, Debug)]
@@ -38,8 +38,19 @@ async fn main() {
         bincode::deserialize_from(file).expect("unable to deserialize input")
     };
 
-    // Write the input directly to a file using bincode
-    let mut file = File::create("input.bin").expect("Failed to create file");
+    let bytes = bincode::serialize(&input).unwrap();
+    let len = bytes.len().to_string();
+    
+    // Create a file that appends when writing.
+    let mut file = OpenOptions::new()
+        .append(true)
+        .open("input.bin")
+        .expect("Failed to open file");
+    
+    // Write the length of the input to the file. (First input to Valida's read)
+    file.write_all(len.as_bytes()).expect("Failed to write length to file");
+
+    // Append the input directly to a file using bincode
     bincode::serialize_into(&mut file, &input).expect("Failed to write input to file");
     
     println!("Input has been written to input.bin");
