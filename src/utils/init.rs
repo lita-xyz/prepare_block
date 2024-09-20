@@ -19,7 +19,7 @@
 use super::db::RemoteDb;
 use alloy_primitives::Bytes;
 use alloy_provider::{Provider, ProviderBuilder};
-use alloy_rpc_types::BlockTransactions;
+use alloy_rpc_types::{BlockId, BlockTransactions, BlockTransactionsKind};
 use anyhow::Result;
 use async_trait::async_trait;
 use reth_valida::primitives::alloy2reth::IntoReth;
@@ -46,11 +46,11 @@ impl ValidaRethInputInitializer for ValidaRethInput {
 
         // Get the block.
         let parent_block = provider
-            .get_block_by_number((block_number - 1).into(), false)
+            .get_block(BlockId::from(block_number - 1), BlockTransactionsKind::Hashes)
             .await?;
         let parent_header = parent_block.unwrap().header;
         let block = provider
-            .get_block_by_number(block_number.into(), true)
+            .get_block(BlockId::from(block_number), BlockTransactionsKind::Full)
             .await?
             .unwrap();
 

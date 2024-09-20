@@ -72,6 +72,7 @@ impl RemoteDb {
             let proof = self.async_executor.block_on(async {
                 self.provider
                     .get_proof(address, indices)
+                    .block_id(BlockId::from(block_number))
                     .await
             })?;
             storage_proofs.insert(address, proof);
@@ -170,16 +171,19 @@ impl Database for RemoteDb {
         let nonce = self.async_executor.block_on(async {
             self.provider
                 .get_transaction_count(address)
+                .block_id(BlockId::from(self.block_number))
                 .await
         })?;
         let balance = self.async_executor.block_on(async {
             self.provider
                 .get_balance(address)
+                .block_id(BlockId::from(self.block_number))
                 .await
         })?;
         let code = self.async_executor.block_on(async {
             self.provider
                 .get_code_at(address)
+                .block_id(BlockId::from(self.block_number))
                 .await
         })?;
 
@@ -212,6 +216,7 @@ impl Database for RemoteDb {
                     address.into_array().into(),
                     index,
                 )
+                .block_id(BlockId::from(self.block_number))
                 .await
         })?;
         self.initial_db
@@ -229,7 +234,7 @@ impl Database for RemoteDb {
         let block_number = u64::try_from(number).unwrap();
         let block_hash = self.async_executor.block_on(async {
             self.provider
-                .get_block_by_number(block_number.into(), false)
+                .get_block(BlockId::from(number), BlockTransactionsKind::Hashes)
                 .await
                 .unwrap()
                 .unwrap()
