@@ -43,12 +43,14 @@ async fn main() {
     
     // Create a file that appends when writing.
     let mut file = OpenOptions::new()
+        .create(true)
         .append(true)
         .open("input.bin")
         .expect("Failed to open file");
     
     // Write the length of the input to the file. (First input to Valida's read)
     file.write_all(len.as_bytes()).expect("Failed to write length to file");
+    file.write(&['\n' as u8]);
 
     // Append the input directly to a file using bincode
     bincode::serialize_into(&mut file, &input).expect("Failed to write input to file");
