@@ -1402,6 +1402,7 @@ dependencies = [
 [[package]]
 name = "entrypoint"
 version = "0.1.0"
+source = "git+https://github.com/lita-xyz/valida-rs.git?branch=main#29eba88e12d9014ed6aa570a2e4721ab839d8584"
 dependencies = [
  "bincode",
  "getrandom",
@@ -3305,29 +3306,21 @@ name = "reth-valida"
 version = "0.1.0"
 dependencies = [
  "alloy-primitives",
- "alloy-provider",
  "alloy-rlp",
  "alloy-rlp-derive",
  "alloy-rpc-types 0.3.6 (git+https://github.com/alloy-rs/alloy)",
- "alloy-transport-http",
  "anyhow",
- "async-trait",
  "entrypoint",
  "getrandom",
  "hashbrown 0.14.5",
  "hex",
- "mio",
- "reqwest 0.12.7",
  "reth-chainspec",
  "reth-primitives",
  "reth-trie-common",
  "revm",
  "rlp",
  "serde",
- "socket2",
  "thiserror",
- "tokio",
- "url",
 ]
 
 [[package]]

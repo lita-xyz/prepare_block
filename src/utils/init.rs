@@ -17,7 +17,6 @@
 // limitations under the License.
 
 use super::db::RemoteDb;
-use alloy_primitives::Bytes;
 use alloy_provider::{Provider, ProviderBuilder};
 use alloy_rpc_types::{BlockId, BlockTransactions, BlockTransactionsKind};
 use anyhow::Result;
