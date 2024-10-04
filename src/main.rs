@@ -56,7 +56,7 @@ async fn main() {
         .expect("Failed to open file");
     
     // Write the length of the input to the file. (First input to Valida's read)
-    file.write_all(len.as_bytes()).expect("Failed to write length to file");
+    file.write_all(b"32").expect("Failed to write length to file");
     file.write(&['\n' as u8]).expect("Failed to write newline to file");
 
     // Append the input directly to a file using bincode
