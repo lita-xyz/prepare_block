@@ -33,17 +33,20 @@ async fn main() {
         let mut file =
             File::create(format!("{}.bin", args.block_number)).expect("unable to open file");
         bincode::options()
+            .with_fixint_encoding()
             .with_big_endian()
             .serialize_into(&mut file, &input).expect("unable to serialize input");
         input
     } else {
         let file = File::open(format!("{}.bin", args.block_number)).expect("unable to open file");
         bincode::options()
+            .with_fixint_encoding()
             .with_big_endian()
             .deserialize_from(file).expect("unable to deserialize input")
     };
 
     let bytes = bincode::options()
+        .with_fixint_encoding()
         .with_big_endian()
         .serialize(&input).unwrap();
     let len = bytes.len().to_string();
@@ -61,6 +64,7 @@ async fn main() {
 
     // Append the input directly to a file using bincode
     bincode::options()
+        .with_fixint_encoding()
         .with_big_endian()
         .serialize_into(&mut file, &input).expect("Failed to write input to file");
     
