@@ -51,7 +51,10 @@ impl ValidaRethInputInitializer for ValidaRethInput {
             .await?
             .unwrap();
         let input = ValidaRethInput {
+            beneficiary: block.header.miner,
+            gas_limit: block.header.gas_limit.try_into().unwrap(),
             timestamp: block.header.timestamp,
+            extra_data: block.header.extra_data,
         };
         // DONE!
 
