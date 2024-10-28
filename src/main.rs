@@ -54,14 +54,9 @@ async fn main() {
     // Create a file that appends when writing.
     let mut file = OpenOptions::new()
         .create(true)
-        .append(true)
         .open("input.bin")
         .expect("Failed to open file");
     
-    // Write the length of the input to the file. (First input to Valida's read)
-    file.write_all(len.as_bytes()).expect("Failed to write length to file");
-    file.write(&['\n' as u8]).expect("Failed to write newline to file");
-
     // Append the input directly to a file using bincode
     bincode::options()
         .with_fixint_encoding()
