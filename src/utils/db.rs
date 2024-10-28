@@ -102,8 +102,8 @@ impl RemoteDb {
                         .header;
                     Header {
                         parent_hash: header.parent_hash.0.into(),
-                        ommers_hash: header.uncles_hash.0.into(),
-                        beneficiary: header.miner.0.into(),
+                        ommers_hash: header.ommers_hash.0.into(),
+                        beneficiary: header.beneficiary.0.into(),
                         state_root: header.state_root.0.into(),
                         transactions_root: header.transactions_root.0.into(),
                         receipts_root: header.receipts_root.0.into(),
@@ -114,9 +114,9 @@ impl RemoteDb {
                         gas_limit: header.gas_limit.try_into().unwrap(),
                         gas_used: header.gas_used.try_into().unwrap(),
                         timestamp: header.timestamp,
-                        extra_data: header.extra_data.0.into(),
-                        mix_hash: header.mix_hash.unwrap(),
-                        nonce: u64::from_be_bytes(header.nonce.unwrap().0),
+                        extra_data: header.extra_data.0.clone().into(),
+                        mix_hash: header.mix_hash,
+                        nonce: u64::from_be_bytes(header.nonce.0),
                         base_fee_per_gas: Some(
                             header.base_fee_per_gas.unwrap().try_into().unwrap(),
                         ),

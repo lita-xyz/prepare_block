@@ -68,11 +68,11 @@ impl ValidaRethInputInitializer for ValidaRethInput {
             .map(|w| w.into_reth())
             .collect();
         let input = ValidaRethInput {
-            beneficiary: block.header.miner,
+            beneficiary: block.header.beneficiary,
             gas_limit: block.header.gas_limit.try_into().unwrap(),
             timestamp: block.header.timestamp,
-            extra_data: block.header.extra_data,
-            mix_hash: block.header.mix_hash.unwrap(),
+            extra_data: block.header.extra_data.clone(),
+            mix_hash: block.header.mix_hash,
             transactions: txs,
             withdrawals,
             parent_state_trie: Default::default(),
