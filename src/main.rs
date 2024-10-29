@@ -1,8 +1,8 @@
 mod utils;
 
+use crate::utils::init::ValidaRethInputInitializer;
 use bincode::Options;
 use clap::Parser;
-use crate::utils::init::ValidaRethInputInitializer;
 use reth_valida::primitives::ValidaRethInput;
 use std::fs::{File, OpenOptions};
 
@@ -34,33 +34,37 @@ async fn main() {
         bincode::options()
             .with_fixint_encoding()
             .with_little_endian()
-            .serialize_into(&mut file, &input).expect("unable to serialize input");
+            .serialize_into(&mut file, &input)
+            .expect("unable to serialize input");
         input
     } else {
         let file = File::open(format!("{}.bin", args.block_number)).expect("unable to open file");
         bincode::options()
             .with_fixint_encoding()
             .with_little_endian()
-            .deserialize_from(file).expect("unable to deserialize input")
+            .deserialize_from(file)
+            .expect("unable to deserialize input")
     };
 
     let bytes = bincode::options()
         .with_fixint_encoding()
         .with_little_endian()
-        .serialize(&input).unwrap();
+        .serialize(&input)
+        .unwrap();
     let len = bytes.len().to_string();
-    
+
     // Create a file that appends when writing.
     let mut file = OpenOptions::new()
         .create(true)
         .open("input.bin")
         .expect("Failed to open file");
-    
+
     // Append the input directly to a file using bincode
     bincode::options()
         .with_fixint_encoding()
         .with_little_endian()
-        .serialize_into(&mut file, &input).expect("Failed to write input to file");
-    
+        .serialize_into(&mut file, &input)
+        .expect("Failed to write input to file");
+
     println!("Input has been written to input.bin");
 }

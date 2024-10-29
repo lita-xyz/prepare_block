@@ -45,7 +45,10 @@ impl ValidaRethInputInitializer for ValidaRethInput {
 
         // Get the block.
         let parent_block = provider
-            .get_block(BlockId::from(block_number - 1), BlockTransactionsKind::Hashes)
+            .get_block(
+                BlockId::from(block_number - 1),
+                BlockTransactionsKind::Hashes,
+            )
             .await?;
         let parent_header = parent_block.unwrap().header;
         let block = provider
