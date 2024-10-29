@@ -17,19 +17,19 @@
 // limitations under the License.
 
 use alloy_provider::{Provider, RootProvider};
+use alloy_rpc_types::BlockTransactionsKind;
 use alloy_rpc_types::{BlockId, EIP1186AccountProofResponse};
 use alloy_transport_http::Http;
 use anyhow::Result;
 use reqwest::Client;
 use reth_primitives::{Address, Header, B256, U256};
+use reth_valida::primitives::db::InMemoryDBHelper;
 use revm::db::InMemoryDB;
-use revm::primitives::{Account, AccountInfo, Bytecode};
 use revm::primitives::db::Database;
 use revm::primitives::HashMap;
+use revm::primitives::{Account, AccountInfo, Bytecode};
 use revm::DatabaseCommit;
-use reth_valida::primitives::db::InMemoryDBHelper;
 use tokio::runtime::Handle;
-use alloy_rpc_types::BlockTransactionsKind;
 /// A database that fetches data from a [HttpProvider].
 pub struct RemoteDb {
     /// The provider to fetch data from.
@@ -212,10 +212,7 @@ impl Database for RemoteDb {
         self.initial_db.basic(address)?;
         let storage = self.async_executor.block_on(async {
             self.provider
-                .get_storage_at(
-                    address.into_array().into(),
-                    index,
-                )
+                .get_storage_at(address.into_array().into(), index)
                 .block_id(BlockId::from(self.block_number))
                 .await
         })?;
