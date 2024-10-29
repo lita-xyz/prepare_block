@@ -5,7 +5,6 @@ use clap::Parser;
 use crate::utils::init::ValidaRethInputInitializer;
 use reth_valida::primitives::ValidaRethInput;
 use std::fs::{File, OpenOptions};
-use std::io::Write;
 
 /// The CLI arguments for the Valida Reth program.
 #[derive(Parser, Debug)]
