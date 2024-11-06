@@ -62,8 +62,7 @@ impl ValidaRethInputInitializer for ValidaRethInput {
         // Create the input.
         let txs = match block.transactions {
             BlockTransactions::Full(txs) => {
-                txs.iter().take(6).for_each(|tx| println!("{:?}", tx));
-                txs.into_iter().map(|tx| tx.into_reth()).take(6).collect()
+                txs.into_iter().map(|tx| tx.into_reth()).collect()
             },
             _ => unreachable!(),
         };
