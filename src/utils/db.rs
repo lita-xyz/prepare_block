@@ -16,14 +16,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+use alloy_primitives::{Address, B256, U256};
 use alloy_provider::{Provider, RootProvider};
 use alloy_rpc_types::BlockTransactionsKind;
 use alloy_rpc_types::{BlockId, EIP1186AccountProofResponse};
 use alloy_transport_http::Http;
 use anyhow::Result;
 use reqwest::Client;
-use reth_primitives::{Address, Header, B256, U256};
 use reth_valida::primitives::db::InMemoryDBHelper;
+use reth_primitives::Header;
 use revm::db::InMemoryDB;
 use revm::primitives::db::Database;
 use revm::primitives::HashMap;
@@ -102,8 +103,8 @@ impl RemoteDb {
                         .header;
                     Header {
                         parent_hash: header.parent_hash.0.into(),
-                        ommers_hash: header.ommers_hash.0.into(),
-                        beneficiary: header.beneficiary.0.into(),
+                        ommers_hash: header.uncles_hash.0.into(),
+                        beneficiary: header.miner.0.into(),
                         state_root: header.state_root.0.into(),
                         transactions_root: header.transactions_root.0.into(),
                         receipts_root: header.receipts_root.0.into(),
@@ -115,15 +116,15 @@ impl RemoteDb {
                         gas_used: header.gas_used.try_into().unwrap(),
                         timestamp: header.timestamp,
                         extra_data: header.extra_data.0.clone().into(),
-                        mix_hash: header.mix_hash,
-                        nonce: u64::from_be_bytes(header.nonce.0),
+                        mix_hash: header.mix_hash.unwrap(),
+                        nonce: header.nonce.unwrap(),
                         base_fee_per_gas: Some(
                             header.base_fee_per_gas.unwrap().try_into().unwrap(),
                         ),
                         blob_gas_used: Some(header.blob_gas_used.unwrap().try_into().unwrap()),
                         excess_blob_gas: Some(header.excess_blob_gas.unwrap().try_into().unwrap()),
                         parent_beacon_block_root: header.parent_beacon_block_root,
-                        requests_root: Default::default(),
+                        requests_hash: Default::default(),
                     }
                 })
             })

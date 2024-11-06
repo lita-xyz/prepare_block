@@ -3,31 +3,32 @@ name = "prepare_block"
 version = "0.1.0"
 edition = "2021"
 
+
 [dependencies]
 clap = { version = "4.4", features = ["derive"] }
 reth-valida = { path = "../reth-valida" }
-alloy-provider = { git = "https://github.com/alloy-rs/alloy" }
-alloy-rpc-types = { git = "https://github.com/alloy-rs/alloy" }
+alloy-provider = "0.5.4"
+alloy-rpc-types = "0.5.4"
 bincode = "1.3.3"
 alloy-rlp = { version = "0.3", default-features = false }
 alloy-rlp-derive = { version = "0.3", default-features = false }
 rlp = "0.5.2"
 serde = { version = "1.0", features = ["derive"] }
 thiserror = "1.0"
-alloy-primitives = { version = "=0.8.5", default-features = false, features = [
+alloy-primitives = { version = "=0.8.11", default-features = false, features = [
     "rlp",
     "serde",
     "std",
     "tiny-keccak",
 ] }
-reth-primitives = { git = "https://github.com/lita-xyz/reth.git", branch = "1.0.6-delendum", default-features = false }
+reth-primitives = { git = "https://github.com/lewis1revill/reth.git", branch = "1.1.1-delendum", default-features = false }
 revm = { version = "14.0.0", features = ["std"], default-features = false }
 anyhow = "1.0.75"
 hashbrown = "0.14.3"
 ethers-core = "2.0.13"
 ethers-providers = "2.0.13"
 tokio = { version = "1.36.0", features = ["full"] }
-alloy-transport-http = { git = "https://github.com/alloy-rs/alloy" }
+alloy-transport-http = "0.5.4"
 url = "2.5.0"
 async-trait = "0.1.77"
 reqwest = "0.12.4"
