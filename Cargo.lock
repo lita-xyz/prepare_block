@@ -2817,7 +2817,6 @@ dependencies = [
  "alloy-transport-http",
  "anyhow",
  "async-trait",
- "bincode",
  "clap",
  "ethers-core",
  "ethers-providers",
@@ -2831,6 +2830,7 @@ dependencies = [
  "revm",
  "rlp",
  "serde",
+ "serde_json",
  "socket2",
  "thiserror",
  "tokio",
@@ -3291,6 +3291,7 @@ dependencies = [
  "revm",
  "rlp",
  "serde",
+ "serde_json",
  "thiserror",
  "valida-rs",
 ]
