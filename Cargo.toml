@@ -21,7 +21,7 @@ alloy-primitives = { version = "=0.8.11", default-features = false, features = [
     "std",
     "tiny-keccak",
 ] }
-reth-primitives = { git = "https://github.com/lewis1revill/reth.git", branch = "1.1.1-delendum", default-features = false }
+reth-primitives = { git = "https://github.com/lita-xyz/reth.git", branch = "1.1.1-delendum", default-features = false }
 revm = { version = "14.0.0", features = ["std"], default-features = false }
 anyhow = "1.0.75"
 hashbrown = "0.14.3"
