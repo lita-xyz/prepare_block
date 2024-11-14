@@ -1,10 +1,10 @@
 mod utils;
 
-use bincode::Options;
 use clap::Parser;
 use crate::utils::init::ValidaRethInputInitializer;
 use reth_valida::primitives::ValidaRethInput;
 use std::fs::{File, OpenOptions};
+use std::io::Write;
 
 /// The CLI arguments for the Valida Reth program.
 #[derive(Parser, Debug)]
@@ -14,9 +14,6 @@ pub struct ValidaRethArgs {
 
     #[arg(short, long)]
     block_number: u64,
-
-    #[arg(short, long)]
-    use_cache: bool,
 }
 
 #[tokio::main]
@@ -25,37 +22,14 @@ async fn main() {
     let args = ValidaRethArgs::parse();
 
     // Get input.
-    let input: ValidaRethInput = if !args.use_cache {
-        let input = ValidaRethInput::initialize(&args.rpc_url, args.block_number)
-            .await
-            .unwrap();
-        let mut file =
-            File::create(format!("{}.bin", args.block_number)).expect("unable to open file");
-        bincode::options()
-            .with_fixint_encoding()
-            .with_little_endian()
-            .serialize_into(&mut file, &input).expect("unable to serialize input");
-        input
-    } else {
-        let file = File::open(format!("{}.bin", args.block_number)).expect("unable to open file");
-        bincode::options()
-            .with_fixint_encoding()
-            .with_little_endian()
-            .deserialize_from(file).expect("unable to deserialize input")
-    };
+    let input = ValidaRethInput::initialize(&args.rpc_url, args.block_number)
+        .await
+        .unwrap();
+    let mut file =
+        File::create(format!("{}.bin", args.block_number)).expect("unable to open file");
+    file.write_all(
+        &serde_json::ser::to_vec(&input).expect("unable to serialize input").as_slice()
+    ).expect("unable to write to file");
     
-    // Create a file to write the input to.
-    let mut file = OpenOptions::new()
-        .create(true)
-        .append(true)
-        .open("input.bin")
-        .expect("Failed to open file");
-    
-    // Write the deserialized input to the file.
-    bincode::options()
-        .with_fixint_encoding()
-        .with_little_endian()
-        .serialize_into(&mut file, &input).expect("Failed to write input to file");
-    
-    println!("Input has been written to input.bin");
+    println!("Input has been written to {}.bin", args.block_number);
 }

@@ -61,21 +61,22 @@ impl ValidaRethInputInitializer for ValidaRethInput {
 
         // Create the input.
         let txs = match block.transactions {
-            BlockTransactions::Full(txs) => txs.into_iter().map(|tx| tx.into_reth()).collect(),
+            BlockTransactions::Full(txs) => {
+                txs.into_iter().map(|tx| tx.into_reth()).collect()
+            },
             _ => unreachable!(),
         };
         let withdrawals = block
             .withdrawals
             .unwrap()
             .into_iter()
-            .map(|w| w.into_reth())
             .collect();
         let input = ValidaRethInput {
-            beneficiary: block.header.beneficiary,
+            beneficiary: block.header.miner,
             gas_limit: block.header.gas_limit.try_into().unwrap(),
             timestamp: block.header.timestamp,
             extra_data: block.header.extra_data.clone(),
-            mix_hash: block.header.mix_hash,
+            mix_hash: block.header.mix_hash.unwrap(),
             transactions: txs,
             withdrawals,
             parent_state_trie: Default::default(),
@@ -103,7 +104,7 @@ impl ValidaRethInputInitializer for ValidaRethInput {
             tokio::task::spawn_blocking(move || {
                 let parent_proofs = provider_db.fetch_initial_storage_proofs().unwrap();
                 let proofs = provider_db.fetch_latest_storage_proofs().unwrap();
-                let ancestor_headers = provider_db.fetch_ancestor_headers().unwrap();
+                let ancestor_headers = provider_db.fetch_ancestor_headers().unwrap() ;
                 (parent_proofs, proofs, ancestor_headers, provider_db)
             })
             .await?;
